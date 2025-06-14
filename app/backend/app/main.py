@@ -9,11 +9,11 @@ import uvicorn
 from fastapi.responses import JSONResponse
 from starlette.middleware.cors import CORSMiddleware
 
-from app.routers import (
-    predict,
-)
+# from app.routers import (
+#     predict,
+# )
 
-from app.services.classifier import Classifier
+# from app.services.classifier import Classifier
 
 
 logger = logging.getLogger("uvicorn.error")
@@ -23,7 +23,7 @@ def create_app(test: bool = False) -> FastAPI:
 
     @asynccontextmanager
     async def lifespan(app: FastAPI):
-        app.state.text_classifier = Classifier()
+        # app.state.text_classifier = Classifier()
         yield
 
     app = FastAPI(lifespan=lifespan)
@@ -37,7 +37,7 @@ def create_app(test: bool = False) -> FastAPI:
         allow_headers=["*"],
     )
 
-    app.include_router(predict.router)
+    # app.include_router(predict.router)
 
     @app.get("/")
     async def agent_root():
