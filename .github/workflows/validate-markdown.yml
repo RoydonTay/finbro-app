@@ -1,0 +1,94 @@
+name: Validate Markdown
+
+on:
+  pull_request_target:
+    branches:
+      - main
+      - staging
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  detect-changes:
+    name: Detect Changed Markdown/Notebook
+    runs-on: ubuntu-latest
+    outputs:
+      should_skip: ${{ steps.detect.outputs.should_skip }}
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+        with:
+          # Ensure we have the actual PR commit
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Detect .md or .ipynb Changes
+        id: detect
+        run: |
+          git fetch --no-tags --prune --depth=1 origin ${{ github.base_ref }}
+          CHANGED_FILES="$(git diff --name-only --diff-filter=AM HEAD origin/${{ github.base_ref }})"
+
+          echo "Changed files:"
+          echo "$CHANGED_FILES"
+
+          if echo "$CHANGED_FILES" | grep -E '\.md$|\.ipynb$'; then
+            echo "should_skip=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "should_skip=true" >> "$GITHUB_OUTPUT"
+          fi
+
+  check-broken-paths:
+    name: Check Broken Relative Paths
+    runs-on: ubuntu-latest
+    needs: detect-changes
+    if: ${{ needs.detect-changes.outputs.should_skip == 'false' }}
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Check broken Paths
+        id: check-broken-paths
+        uses: john0isaac/action-check-markdown@v1.1.0
+        with:
+          command: check_broken_paths
+          directory: ./
+          guide-url: "https://github.com/0Upjh80d/agents/blob/main/CONTRIBUTING.md"
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+  check-urls-locale:
+    name: Check URLs Don't Have Locale
+    runs-on: ubuntu-latest
+    needs: [detect-changes, check-broken-paths]
+    if: ${{ needs.detect-changes.outputs.should_skip == 'false' }}
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Run Check URLs Country Locale
+        id: check-urls-locale
+        uses: john0isaac/action-check-markdown@v1.1.0
+        with:
+          command: check_urls_locale
+          directory: ./
+          guide-url: "https://github.com/0Upjh80d/agents/blob/main/CONTRIBUTING.md"
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+  check-broken-links:
+    name: Check Broken Links
+    runs-on: ubuntu-latest
+    needs: detect-changes
+    if: ${{ needs.detect-changes.outputs.should_skip == 'false' }}
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Link Checker
+        id: lychee
+        uses: lycheeverse/lychee-action@v2
+        with:
+          args: --verbose --no-progress './**/*.md'
+          fail: true
