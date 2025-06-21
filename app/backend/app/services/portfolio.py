@@ -1,16 +1,15 @@
+
 from decimal import Decimal
 from typing import List
 
 import sqlalchemy
-from sqlalchemy.engine.row import Row
-from typing import List
+import sqlalchemy.engine.row 
 import json
 import yfinance as yf
 import pandas as pd
 import numpy as np
 import datetime
 from zoneinfo import ZoneInfo
-from decimal import Decimal
 
 class Stock:
     def __init__(self, ticker: yf.Ticker):
