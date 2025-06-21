@@ -1,11 +1,10 @@
-from fastapi import FastAPI
-
 import asyncio
 import logging
 import os
 from contextlib import asynccontextmanager
 
 import uvicorn
+from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 from starlette.middleware.cors import CORSMiddleware
 
