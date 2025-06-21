@@ -1,11 +1,11 @@
+from fastapi import FastAPI
+
 import asyncio
 import logging
 import os
 from contextlib import asynccontextmanager
 
-import finnhub
 import uvicorn
-from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 from starlette.middleware.cors import CORSMiddleware
 
@@ -19,13 +19,11 @@ from starlette.middleware.cors import CORSMiddleware
 logger = logging.getLogger("uvicorn.error")
 logger.setLevel(logging.INFO)
 
-
 def create_app(test: bool = False) -> FastAPI:
 
     @asynccontextmanager
     async def lifespan(app: FastAPI):
-        FINNHUB_API_KEY = os.environ.get("FINNHUB_API_KEY")
-        app.state.finnhub_client = finnhub.Client(FINNHUB_API_KEY)
+        # app.state.text_classifier = Classifier()
         yield
 
     app = FastAPI(lifespan=lifespan)
@@ -47,9 +45,7 @@ def create_app(test: bool = False) -> FastAPI:
 
     return app
 
-
 app = create_app()
-
 
 async def run_apps():
     config_agent = uvicorn.Config(
@@ -64,5 +60,6 @@ async def run_apps():
 # main function to run the app
 if __name__ == "__main__":
     asyncio.run(run_apps())
+    
 
 # Run in terminal to start: uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
