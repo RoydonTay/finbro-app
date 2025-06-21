@@ -1,7 +1,7 @@
-
+import datetime
+import json
 from decimal import Decimal
 from typing import List
-
 import sqlalchemy
 import sqlalchemy.engine.row 
 import json
@@ -36,10 +36,6 @@ class Portfolio:
 
         if not rows:
             raise Exception("Expected more than 0 rows")
-<<<<<<< HEAD
-=======
-
->>>>>>> 1fec4c0 (style: reformat code with black)
         self.id = rows[0].id
         self.username = rows[0].username
         self.contact_number = rows[0].contact_number
@@ -171,21 +167,4 @@ class Portfolio:
             self.setStockPrice(new_stock_price, ticker)
             self.setNumberOfShares(new_share_amt, ticker)
 
-<<<<<<< HEAD
 
-
-=======
-    def rebalance(self):
-        """Idea:
-
-        1. inputs: current portfolio percentages + ideal portfolio percentages
-        2. compute new total value of portfolio
-        3. use the ideal percentages that the user wants to multiply by the new value
-        4. find the difference for each stock (if stock exists previously, need to consider current value in portfolio to calculate difference)
-        5. suggest what to buy and sell"""
-
-        # step 2: compute total value of portfolio
-
-    def track_portfolio(self):
-        pass
->>>>>>> 1fec4c0 (style: reformat code with black)
