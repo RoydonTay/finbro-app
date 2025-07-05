@@ -7,7 +7,7 @@ requires-python = ">=3.13"
 dependencies = [
     "aiohttp>=3.11.18",
     "fastapi>=0.115.12",
-    "finnhub-python>=2.4.23",
+    "psycopg2>=2.9.10",
     "python-dotenv>=1.1.0",
     "uvicorn>=0.34.3",
 ]
