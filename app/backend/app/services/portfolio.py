@@ -1,10 +1,8 @@
 import datetime
-import json
 from decimal import Decimal
 from typing import List
 import sqlalchemy
 import sqlalchemy.engine.row 
-import json
 import yfinance as yf
 import pandas as pd
 import numpy as np
