@@ -1,12 +1,14 @@
 import datetime
 from decimal import Decimal
 from typing import List
-import sqlalchemy
-import sqlalchemy.engine.row 
-import yfinance as yf
-import pandas as pd
-import numpy as np
 from zoneinfo import ZoneInfo
+
+import numpy as np
+import pandas as pd
+import sqlalchemy
+import sqlalchemy.engine.row
+import yfinance as yf
+
 
 class Stock:
     def __init__(self, ticker: yf.Ticker):
@@ -53,9 +55,8 @@ class Portfolio:
             self.last_update_dates[row.ticker] = row.last_update_date
             self.stock_price[row.ticker] = row.price
             self.number_of_shares[row.ticker] = row.number_of_shares
-        
 
-        # NOTE: TO BE DELETED 
+        # NOTE: TO BE DELETED
         # for row in rows:
         #     self.number_of_shares[row.ticker] = row.number_of_shares
         #     self.current_holdings[row.ticker] = row.price * row.number_of_shares
@@ -63,7 +64,6 @@ class Portfolio:
 
         # find total value of portfolio
         self.total_value = sum(self.current_holdings.values())
-
 
     def rebalance(self) -> None:
         """
@@ -83,7 +83,7 @@ class Portfolio:
         3. use the ideal percentages that the user wants to multiply by the new value
         4. find the difference for each stock (if stock exists previously, need to consider current value in portfolio to calculate difference)
         5. suggest what to buy and sell
-        
+
         """
         # step 2: compute total value of portfolio (done)
 
@@ -109,7 +109,6 @@ class Portfolio:
                 print(f"You should buy {shares_to_buy: .2f} shares of {ticker}")
             else:
                 print(f"You should sell {-1 * shares_to_buy: .2f} shares of {ticker}")
-
 
     def setLastUpdateDate(self, new_date: datetime.date, ticker: str):
         """
@@ -163,5 +162,3 @@ class Portfolio:
             self.setLastUpdateDate(cur_date, ticker)
             self.setStockPrice(new_stock_price, ticker)
             self.setNumberOfShares(new_share_amt, ticker)
-
-
