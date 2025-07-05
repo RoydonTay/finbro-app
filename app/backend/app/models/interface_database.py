@@ -1,24 +1,26 @@
-from psycopg2 import connect
-
-from sqlalchemy import create_engine, text
-
 import os
+
 from dotenv import load_dotenv
+from sqlalchemy import create_engine, text
 
 load_dotenv()
 
+postgres_user = os.getenv("POSTGRES_USER")
+postgres_password = os.getenv("POSTGRES_PASSWORD")
+postgres_db = os.getenv("POSTGRES_DB")
+
 engine = create_engine(
     # connection string
-    f"postgresql://{os.getenv("POSTGRES_USER")}:{os.getenv("POSTGRES_PASSWORD")}@localhost:5432/{os.getenv("POSTGRES_DB")}"
+    f"postgresql://{postgres_user}:{postgres_password}@localhost:5432/{postgres_db}"
 )
 
 with engine.connect() as conn:
     result = conn.execute(
         text(
-            '''
+            """
             SELECT * FROM users u, holdings h
-            WHERE u.id = h.user_id; 
-            '''
+            WHERE u.id = h.user_id;
+            """
         )
     )
 

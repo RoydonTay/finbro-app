@@ -1,8 +1,8 @@
-import sqlalchemy
-
+from decimal import Decimal
 from typing import List
 
-from decimal import Decimal
+import sqlalchemy
+
 
 class Portfolio:
     # should pull the params from the created database
@@ -12,10 +12,10 @@ class Portfolio:
 
         # function should print what we need to do to rebalance the portfolio
         # inputs: dict of current portfolio holdings, target allocation and total value of portfolio
-        
+
         if not rows:
             raise Exception("Expected more than 0 rows")
-        
+
         self.id = rows[0].id
         self.username = rows[0].username
         self.contact_number = rows[0].contact_number
@@ -37,8 +37,7 @@ class Portfolio:
         self.total_value = sum(self.current_holdings.values())
 
     def rebalance(self) -> None:
-
-        '''
+        """
         Rebalance the portfolio. Currently only prints out what the user should purchase, does not update user's holdings yet.
 
         Args:
@@ -48,15 +47,15 @@ class Portfolio:
         Returns:
             None.
 
-        '''
-    
-        '''Idea:
+        """
+
+        """Idea:
 
         1. inputs: current portfolio percentages + ideal portfolio percentages
         2. compute new total value of portfolio
         3. use the ideal percentages that the user wants to multiply by the new value
         4. find the difference for each stock (if stock exists previously, need to consider current value in portfolio to calculate difference)
-        5. suggest what to buy and sell'''
+        5. suggest what to buy and sell"""
 
         # step 2: compute total value of portfolio (done)
 
@@ -66,7 +65,7 @@ class Portfolio:
         for ticker, ideal_percentage in self.percentage_preference.items():
             # convert from float to decimal for precise calculations
             ideal_holdings[ticker] = Decimal(ideal_percentage) * self.total_value
-        
+
         # step 4: find difference in amount between ideal amount user wants, and current amount user owns
         # for each stock
         differences = {}
